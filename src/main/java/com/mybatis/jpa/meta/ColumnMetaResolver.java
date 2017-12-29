@@ -61,12 +61,12 @@ public class ColumnMetaResolver {
                 Enumerated enumerated = field.getAnnotation(Enumerated.class);
                 if (enumerated.value() == EnumType.ORDINAL) {
                     EnumOrdinalTypeHandler<? extends Enum<?>> typeHandler = new EnumOrdinalTypeHandler(
-                            field.getClass());
+                    		field.getType());
                     return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
 
                 }
             }
-            EnumTypeHandler<? extends Enum<?>> typeHandler = new EnumTypeHandler(field.getClass());
+            EnumTypeHandler<? extends Enum<?>> typeHandler = new EnumTypeHandler(field.getType());
             return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
         }
 

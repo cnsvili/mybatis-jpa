@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /***
@@ -37,6 +38,9 @@ public class User {
 	/** 更新时间 */
 	@Column(name = "gmt_modify")
 	private Date modifyTime;
+	
+	@OneToOne(mappedBy = "user_id")
+    private UserArchive archive;
 
 	public String getUserId() {
 		return userId;
@@ -86,4 +90,12 @@ public class User {
 		this.modifyTime = modifyTime;
 	}
 
+	public UserArchive getArchive() {
+		return archive;
+	}
+
+	public void setArchive(UserArchive archive) {
+		this.archive = archive;
+	}
+	
 }

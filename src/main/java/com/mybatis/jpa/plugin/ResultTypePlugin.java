@@ -47,8 +47,6 @@ public class ResultTypePlugin implements Interceptor {
 
                         // modify the resultMaps
                         FieldReflectUtil.setFieldValue(resultSetHandler, "mappedStatement", mappedStatement);
-
-
                     }
                 }
             }
@@ -73,7 +71,7 @@ public class ResultTypePlugin implements Interceptor {
      * Use static inner classes ensure thread safety
      */
     private static class ResultMapSwapperHolder {
-        private static Map<String, ResultMapSwapper> swapperMap = new HashMap();
+        private static Map<String, ResultMapSwapper> swapperMap = new HashMap<>();
 
         public static ResultMapSwapper getSwapper(Configuration configuration) {
             String id = configuration.getEnvironment().getId();
