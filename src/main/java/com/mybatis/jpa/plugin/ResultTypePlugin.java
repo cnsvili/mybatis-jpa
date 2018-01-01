@@ -10,6 +10,7 @@ import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.Configuration;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Statement;
 import java.util.*;
 
@@ -35,7 +36,7 @@ public class ResultTypePlugin implements Interceptor {
                 ResultMap resultMap = resultMaps.get(0);
 
                 if (resultMap.getResultMappings() == null || resultMap.getResultMappings().isEmpty()) {
-                    if (resultMap.getType().isAnnotationPresent(Entity.class)) {
+                    if (resultMap.getType().isAnnotationPresent(Entity.class) || resultMap.getType().isAnnotationPresent(Table.class)) {
 
                         ResultMapSwapper swapper = ResultMapSwapperHolder.getSwapper(mappedStatement.getConfiguration());
                         ResultMap newResultMap = swapper.reloadResultMap(mappedStatement.getResource(), resultMap.getId(), resultMap.getType());
@@ -73,7 +74,7 @@ public class ResultTypePlugin implements Interceptor {
     private static class ResultMapSwapperHolder {
         private static Map<String, ResultMapSwapper> swapperMap = new HashMap<>();
 
-        public static ResultMapSwapper getSwapper(Configuration configuration) {
+        static ResultMapSwapper getSwapper(Configuration configuration) {
             String id = configuration.getEnvironment().getId();
             if (!swapperMap.containsKey(id)) {
                 swapperMap.put(id, new ResultMapSwapper(configuration));
