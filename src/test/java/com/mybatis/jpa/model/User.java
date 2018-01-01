@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class User {
 
 	@Id
-	private String userId;
+	private Long userId;
 
 	/** 用户识别码,唯一 */
 	private String uniCode;
@@ -42,11 +42,11 @@ public class User {
 	@OneToOne(mappedBy = "user_id")
     private UserArchive archive;
 
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -97,5 +97,4 @@ public class User {
 	public void setArchive(UserArchive archive) {
 		this.archive = archive;
 	}
-	
 }

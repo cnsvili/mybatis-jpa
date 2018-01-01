@@ -5,11 +5,69 @@
 [![maven central](https://img.shields.io/badge/version-2.0.0-brightgreen.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.cnsvili%7Cmybatis-jpa%7C2.0.0%7C)
 [![APACHE 2 License](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)](LICENSE)
 
-The plugins for mybatis, in order to provider the ability to handler jpa.
+[:book: English Documentation](README-EN.md) | :book: 中文文档
 
-mybatis-jpa comes in two flavors.
+Mybatis插件，提供Mybatis处理JPA的能力。
 
-The JRE flavor requires JDK 1.7 or higher.
-The Mybatis version requires 3.4.x or higher.
+## 插件清单
 
-**project is in building.**
++ ResultTypePlugin [![plugin](https://img.shields.io/badge/plugin-resolved-green.svg)]()
+
++ UpdatePlugin [![plugin](https://img.shields.io/badge/plugin-building-yellow.svg)]()
+
+### ResultTypePlugin
+
+对于常规的结果映射,不需要再构建ResultMap,ResultTypePlugin增加了Mybatis对结果映射(JavaBean/POJO)中JPA注解的处理。
+
+映射规则：
+
++ 名称匹配默认为驼峰(Java Field)与下划线(SQL Column)
+
++ 使用@Column注解中name属性指定SQL Column
+
+类型处理:
+
++ Boolean-->BooleanTypeHandler
+
++ Enum默认为EnumTypeHandler
+
++ 使用@Enumerated(EnumType.ORDINAL) 指定为 EnumOrdinalTypeHandler
+
+结果集嵌套:
+
++ 仅支持OneToOne
+
+e.g.
+
+JavaBean
+
+```JAVA
+@Entity
+public class UserArchive {// <resultMap id="UserArchive" type="UserArchive">
+
+    @Id
+    private Long userId;// <id property="id" column="user_id" />
+                           
+    /** 默认驼峰与下划线转换 */
+    private String userName;// <result property="username" column="user_name"/>
+
+    /** 枚举类型 */
+    @Enumerated(EnumType.ORDINAL)
+    private SexEnum sex;// <result property="sex" column="sex" typeHandler=EnumOrdinalTypeHandler/>
+
+    /** 属性名与列名不一致 */
+    @Column(name = "gmt_create")
+    private Date createTime;// <result property="createTime" column="gmt_create"/>
+}// </resultMap>
+```
+
+mapper.xml
+
+```xml
+<!-- in xml,declare the resultType -->
+<select id="selectById" resultType="UserArchive">
+	SELECT * FROM t_sys_user_archive WHERE user_id = #{userId}
+</select>
+```
+
+更多示例请查看test目录代码。
