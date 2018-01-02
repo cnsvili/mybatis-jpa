@@ -12,10 +12,16 @@ import com.mybatis.jpa.model.User;
  */
 @Repository
 public interface UserMapper {
-	
+
+	@Select("SELECT * FROM t_sys_user WHERE user_id = #{userId}")
 	User selectById(long userId);
-	
+
 	@Select("SELECT t.*,a.* FROM t_sys_user t,t_sys_user_archive a WHERE t.user_id = a.user_id and t.user_id = #{userId}")
-	User selectUnionById(long userId);
+	User selectOneToOne(long userId);
+
+	@Select("SELECT t.*,r.* FROM t_sys_user t LEFT JOIN t_relation_user_role r ON t.user_id = r.user_id WHERE t.user_id = #{userId}")
+	User selectOneToMany(long userId);
+	
+	User selectUnion(long userId);
 
 }

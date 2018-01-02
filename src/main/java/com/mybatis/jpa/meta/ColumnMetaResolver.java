@@ -70,10 +70,9 @@ public class ColumnMetaResolver {
             return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
         }
 
-        Class<? extends TypeHandler<?>> typeHandlerClass = null;
         if (field.getType().equals(Boolean.class)) {
-            typeHandlerClass = BooleanTypeHandler.class;
+            return BooleanTypeHandler.class;
         }
-        return typeHandlerClass;
+        return null;
     }
 }

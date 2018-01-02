@@ -1,6 +1,8 @@
 package com.mybatis.jpa.swapper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +19,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  * @author svili
@@ -30,7 +34,7 @@ public class ResultMapSwapper {
      */
     private ConcurrentHashMap<String, ResultMap> resultMaps = new ConcurrentHashMap<>();
 
-    public ResultMapSwapper(Configuration configuration){
+    public ResultMapSwapper(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -71,9 +75,24 @@ public class ResultMapSwapper {
             String nestedSelect = null;
             String nestedResultMap = null;
             if (AssociationUtil.isAssociationField(field)) {
-                // OneToOne
-                nestedResultMap = id + "_association[" + javaType.getSimpleName() + "]";
-                registerResultMap(resolveResultMap(resource, nestedResultMap, javaType));
+                // OneToOne or OneToMany
+
+                // mappedBy
+                column = AssociationUtil.getMappedName(field);
+                if (field.isAnnotationPresent(OneToOne.class)) {
+                    nestedResultMap = id + "_association[" + javaType.getSimpleName() + "]";
+                    registerResultMap(resolveResultMap(resource, nestedResultMap, javaType));
+                }
+                if (field.isAnnotationPresent(OneToMany.class)) {
+                    Type genericType = field.getGenericType();
+                    if (genericType instanceof ParameterizedType) {
+                        ParameterizedType pt = (ParameterizedType) genericType;
+                        Class<?> actualType = (Class<?>) pt.getActualTypeArguments()[0];
+                        // create resultMap with actualType
+                        nestedResultMap = id + "collection[" + actualType.getSimpleName() + "]";
+                        registerResultMap(resolveResultMap(resource, nestedResultMap, actualType));
+                    }
+                }
             }
 
             String notNullColumn = null;
@@ -87,7 +106,7 @@ public class ResultMapSwapper {
             }
             // lazy or eager
             boolean lazy = false;
-            // enum
+            // typeHandler
             Class<? extends TypeHandler<?>> typeHandlerClass = ColumnMetaResolver.resolveTypeHandler(field);
 
             ResultMapping resultMapping = assistant.buildResultMapping(type, property, column,
@@ -98,6 +117,5 @@ public class ResultMapSwapper {
         return resultMappings;
 
     }
-
 
 }

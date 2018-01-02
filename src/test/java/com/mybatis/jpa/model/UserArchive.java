@@ -16,7 +16,6 @@ import com.mybatis.jpa.model.type.SexEnum;
  * @author svili
  *
  */
-@Entity
 @Table(name = "t_sys_user_archive")
 public class UserArchive {
 

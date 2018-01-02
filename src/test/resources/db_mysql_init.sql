@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `test` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `test`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: test
@@ -16,6 +14,31 @@ USE `test`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `t_relation_user_role`
+--
+
+DROP TABLE IF EXISTS `t_relation_user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_relation_user_role` (
+  `relation_id` bigint(18) NOT NULL,
+  `user_id` bigint(18) DEFAULT NULL,
+  `role_id` bigint(18) DEFAULT NULL,
+  PRIMARY KEY (`relation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_relation_user_role`
+--
+
+LOCK TABLES `t_relation_user_role` WRITE;
+/*!40000 ALTER TABLE `t_relation_user_role` DISABLE KEYS */;
+INSERT INTO `t_relation_user_role` VALUES (118299928123654321,118299928123543552,126364026828492800),(118299928123654322,118299928123543552,126364026828492801);
+/*!40000 ALTER TABLE `t_relation_user_role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `t_sys_user`
@@ -86,4 +109,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-27 15:05:17
+-- Dump completed on 2018-01-02 18:09:49

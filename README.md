@@ -35,7 +35,8 @@ Mybatis插件，提供Mybatis处理JPA的能力。
 
 结果集嵌套:
 
-+ 仅支持OneToOne
++ 支持OneToOne
++ 支持OneToMany
 
 e.g.
 
@@ -43,7 +44,7 @@ JavaBean
 
 ```JAVA
 @Entity
-public class UserArchive {// <resultMap id="UserArchive" type="UserArchive">
+public class UserArchive {// <resultMap id="xxx" type="userArchive">
 
     @Id
     private Long userId;// <id property="id" column="user_id" />
@@ -65,7 +66,7 @@ mapper.xml
 
 ```xml
 <!-- in xml,declare the resultType -->
-<select id="selectById" resultType="UserArchive">
+<select id="selectById" resultType="userArchive">
 	SELECT * FROM t_sys_user_archive WHERE user_id = #{userId}
 </select>
 ```
