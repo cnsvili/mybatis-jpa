@@ -1,8 +1,6 @@
 package com.mybatis.jpa.util;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +49,22 @@ public class PersistentUtil {
         }
     }
 
+    public static String getMappedName(Field field) {
+        if (field.isAnnotationPresent(OneToOne.class)) {
+            OneToOne one = field.getAnnotation(OneToOne.class);
+            if (!one.mappedBy().trim().equals("")) {
+                return one.mappedBy();
+            }
+        }
+        if (field.isAnnotationPresent(OneToMany.class)) {
+            OneToMany one = field.getAnnotation(OneToMany.class);
+            if (!one.mappedBy().trim().equals("")) {
+                return one.mappedBy();
+            }
+        }
+        return null;
+    }
+
     public static List<Field> getPersistentFields(Class<?> clazz) {
         List<Field> list = new ArrayList<>();
         Class<?> searchType = clazz;
@@ -66,7 +80,38 @@ public class PersistentUtil {
         return list;
     }
 
+    public static boolean insertable(Field field) {
+        if (!isPersistentField(field) || isAssociationField(field)) {
+            return false;
+        }
+
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            return column.insertable();
+        }
+
+        return true;
+    }
+
+    public static boolean updatable(Field field) {
+        if (!isPersistentField(field) || isAssociationField(field)) {
+            return false;
+        }
+
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            return column.updatable();
+        }
+
+        return true;
+    }
+
     public static boolean isPersistentField(Field field) {
         return !field.isAnnotationPresent(Transient.class);
+    }
+
+    public static boolean isAssociationField(Field field) {
+        return field.isAnnotationPresent(OneToOne.class) ||
+                field.isAnnotationPresent(OneToMany.class);
     }
 }

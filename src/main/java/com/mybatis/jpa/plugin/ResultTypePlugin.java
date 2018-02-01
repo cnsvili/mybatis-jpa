@@ -1,6 +1,5 @@
 package com.mybatis.jpa.plugin;
 
-import com.mybatis.jpa.swapper.ResultMapSwapper;
 import com.mybatis.jpa.util.FieldReflectUtil;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
@@ -72,14 +71,14 @@ public class ResultTypePlugin implements Interceptor {
      * Use static inner classes ensure thread safety
      */
     private static class ResultMapSwapperHolder {
-        private static Map<String, ResultMapSwapper> swapperMap = new HashMap<>();
+        private static Map<String, ResultMapSwapper> swappers = new HashMap<>();
 
         static ResultMapSwapper getSwapper(Configuration configuration) {
             String id = configuration.getEnvironment().getId();
-            if (!swapperMap.containsKey(id)) {
-                swapperMap.put(id, new ResultMapSwapper(configuration));
+            if (!swappers.containsKey(id)) {
+                swappers.put(id, new ResultMapSwapper(configuration));
             }
-            return swapperMap.get(id);
+            return swappers.get(id);
         }
     }
 
