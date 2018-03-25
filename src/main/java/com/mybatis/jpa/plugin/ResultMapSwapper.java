@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.mybatis.jpa.statement.ColumnMetaResolver;
+import com.mybatis.jpa.util.ColumnMetaResolver;
 import com.mybatis.jpa.util.PersistentUtil;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.mapping.ResultFlag;

@@ -1,4 +1,4 @@
-package com.mybatis.jpa.statement;
+package com.mybatis.jpa.util;
 
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.type.*;

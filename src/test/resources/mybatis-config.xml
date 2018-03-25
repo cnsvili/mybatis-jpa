@@ -36,7 +36,6 @@
 
 	<plugins>
 		<plugin interceptor="com.mybatis.jpa.plugin.ResultTypePlugin">
-			<!-- <property name="someProperty" value="100" /> -->
 		</plugin>
 	</plugins>
 </configuration>

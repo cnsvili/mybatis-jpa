@@ -1,6 +1,6 @@
 package com.mybatis.jpa.definition.template;
 
-import com.mybatis.jpa.statement.ColumnMetaResolver;
+import com.mybatis.jpa.util.ColumnMetaResolver;
 import com.mybatis.jpa.util.PersistentUtil;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -18,7 +18,7 @@ public class UpdateSqlTemplate implements SqlTemplate {
                 UPDATE(PersistentUtil.getTableName(type));
                 for (Field field : PersistentUtil.getPersistentFields(type)) {
                     if (PersistentUtil.updatable(field)) {
-                        SET(field.getName() + " = " + ColumnMetaResolver.resolveSqlPlaceholder(field));
+                        SET(PersistentUtil.getColumnName(field) + " = " + ColumnMetaResolver.resolveSqlPlaceholder(field));
                     }
                 }
             }

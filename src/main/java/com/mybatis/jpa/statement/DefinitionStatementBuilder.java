@@ -1,8 +1,8 @@
 package com.mybatis.jpa.statement;
 
+import com.mybatis.jpa.definition.AnnotationDefinitionRegistry;
 import com.mybatis.jpa.definition.adaptor.AnnotationAdaptable;
 import com.mybatis.jpa.definition.property.AnnotationProperty;
-import com.mybatis.jpa.definition.AnnotationDefinitionRegistry;
 import com.mybatis.jpa.definition.template.SqlTemplate;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -23,22 +23,34 @@ public class DefinitionStatementBuilder implements StatementBuildable {
 
     protected Configuration configuration;
 
-    protected AnnotationDefinitionRegistry definitionRegistry = new AnnotationDefinitionRegistry();
+    protected AnnotationDefinitionRegistry definitionRegistry;
 
     public DefinitionStatementBuilder(Configuration configuration) {
+        this(configuration, new AnnotationDefinitionRegistry());
+    }
+
+    public DefinitionStatementBuilder(Configuration configuration, AnnotationDefinitionRegistry definitionRegistry) {
         this.configuration = configuration;
+        this.definitionRegistry = definitionRegistry;
     }
 
     @Override
-    public MappedStatement parseStatement(Method method) {
+    public void parseStatement(Method method) {
+
+        if (!configuration.isResourceLoaded(method.getDeclaringClass().toString())) {
+            configuration.addLoadedResource(method.getDeclaringClass().toString());
+        }
 
         LanguageDriver languageDriver = configuration.getDefaultScriptingLanuageInstance();
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, parseSQL(method), Object.class);
-        String resource = recognizeResource(method);
-        String statementId = resource + method.getName();
+        // String statementId = resource + method.getName();
+        String statementId = method.getDeclaringClass().getName() + "." + method.getName();
         MappedStatement.Builder builder = new MappedStatement.Builder(configuration, statementId, sqlSource, recognizeSqlCommandType(method));
+
+        String resource = recognizeResource(method);
         builder.resource(resource).lang(languageDriver).statementType(StatementType.PREPARED);
-        return builder.build();
+        MappedStatement statement = builder.build();
+        configuration.addMappedStatement(statement);
     }
 
     protected String parseSQL(Method method) {
@@ -68,9 +80,9 @@ public class DefinitionStatementBuilder implements StatementBuildable {
         return recognizeAdaptor(method).sqlCommandType();
     }
 
-    public AnnotationAdaptable recognizeAdaptor(Method method){
+    protected AnnotationAdaptable recognizeAdaptor(Method method) {
         Annotation annotation = recognizeDefinitionAnnotation(method);
-        return definitionRegistry.resolveAdaptor(annotation.getClass());
+        return definitionRegistry.resolveAdaptor(annotation.annotationType());
     }
 
     protected Annotation recognizeDefinitionAnnotation(Method method) {

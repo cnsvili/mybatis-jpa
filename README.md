@@ -2,7 +2,7 @@
 
 [![Mybatis](https://img.shields.io/badge/mybatis-3.4.x-brightgreen.svg)](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis)
 [![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg)]()
-[![maven central](https://img.shields.io/badge/version-2.0.0-brightgreen.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.cnsvili%7Cmybatis-jpa%7C2.0.0%7C)
+[![maven central](https://img.shields.io/badge/version-2.1.0-brightgreen.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.cnsvili%7Cmybatis-jpa%7C2.1.0%7C)
 [![APACHE 2 License](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)](LICENSE)
 
 [:book: English Documentation](README-EN.md) | :book: 中文文档
@@ -13,7 +13,7 @@ Mybatis插件，提供Mybatis处理JPA的能力。
 
 + ResultTypePlugin [![plugin](https://img.shields.io/badge/plugin-resolved-green.svg)]()
 
-+ UpdatePlugin [![plugin](https://img.shields.io/badge/plugin-building-yellow.svg)]()
++ DefinitionStatementScanner [![plugin](https://img.shields.io/badge/plugin-building-yellow.svg)]()
 
 ### ResultTypePlugin
 
@@ -39,6 +39,17 @@ Mybatis插件，提供Mybatis处理JPA的能力。
 + 支持OneToMany
 
 e.g.
+
+mybatis.xml
+
+```xml
+<configuration>
+    <plugins>
+		<plugin interceptor="com.mybatis.jpa.plugin.ResultTypePlugin">
+		</plugin>
+	</plugins>
+</configuration>
+```
 
 JavaBean
 
@@ -69,6 +80,58 @@ mapper.xml
 <select id="selectById" resultType="userArchive">
 	SELECT * FROM t_sys_user_archive WHERE user_id = #{userId}
 </select>
+```
+
+### DefinitionStatementScanner
+
+注册MappedStatement,基于注解,仅支持Insert和Update。
+
+#### InsertDefinition:
+
++ selective: 默认值false(处理null属性)
+
+#### updateDefinition:
+
++ selective: 默认值false(处理null属性)
+
++ where: SQL condition
+
+e.g.
+
+Spring 容器初始化完成后执行
+
+```java
+@Service
+public class DefinitionStatementInit {
+
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
+
+    @PostConstruct
+    public void init() {
+        Configuration configuration = sqlSessionFactory.getConfiguration();
+        StatementBuildable statementBuildable = new DefinitionStatementBuilder(configuration);
+        DefinitionStatementScanner.Builder builder = new DefinitionStatementScanner.Builder();
+        DefinitionStatementScanner definitionStatementScanner = builder.configuration(configuration).basePackages(new String[]{"com.mybatis.jpa.mapper"})
+                .statementBuilder(statementBuildable).build();
+        definitionStatementScanner.scan();
+    }
+}
+```
+
+Mapper
+
+```Java
+@Mapper
+@Repository
+public interface UserUpdateMapper {
+
+    @InsertDefinition(selective = true)
+    int insert(User user);
+
+    @UpdateDefinition(selective = true, where = " user_id = #{userId}")
+    int updateById(User user);
+}
 ```
 
 更多示例请查看test目录代码。

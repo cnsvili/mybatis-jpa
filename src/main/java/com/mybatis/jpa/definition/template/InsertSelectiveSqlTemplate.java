@@ -1,6 +1,6 @@
 package com.mybatis.jpa.definition.template;
 
-import com.mybatis.jpa.statement.ColumnMetaResolver;
+import com.mybatis.jpa.util.ColumnMetaResolver;
 import com.mybatis.jpa.util.PersistentUtil;
 
 import java.lang.reflect.Field;

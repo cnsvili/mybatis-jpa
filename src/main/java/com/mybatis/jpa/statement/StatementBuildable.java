@@ -9,5 +9,5 @@ import java.lang.reflect.Method;
  **/
 public interface StatementBuildable {
 
-    MappedStatement parseStatement(Method method);
+    void parseStatement(Method method);
 }
