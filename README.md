@@ -9,11 +9,21 @@
 
 Mybatis插件，提供Mybatis处理JPA的能力。
 
+## maven
+
+```xml
+        <dependency>
+            <groupId>com.littlenb</groupId>
+            <artifactId>mybatis-jpa</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+```
+
 ## 插件清单
 
 + ResultTypePlugin [![plugin](https://img.shields.io/badge/plugin-resolved-green.svg)]()
 
-+ DefinitionStatementScanner [![plugin](https://img.shields.io/badge/plugin-building-yellow.svg)]()
++ DefinitionStatementScanner [![plugin](https://img.shields.io/badge/plugin-resolved-green.svg)]()
 
 ### ResultTypePlugin
 
