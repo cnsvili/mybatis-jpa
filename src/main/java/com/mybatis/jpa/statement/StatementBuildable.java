@@ -1,7 +1,5 @@
 package com.mybatis.jpa.statement;
 
-import org.apache.ibatis.mapping.MappedStatement;
-
 import java.lang.reflect.Method;
 
 /**

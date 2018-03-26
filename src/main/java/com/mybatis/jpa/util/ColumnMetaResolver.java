@@ -6,6 +6,7 @@ import org.apache.ibatis.type.*;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 /**
  * @author svili
@@ -29,7 +30,7 @@ public class ColumnMetaResolver {
         if (field.getType().isEnum()) {
             if (field.isAnnotationPresent(Enumerated.class)) {
                 Enumerated enumerated = field.getAnnotation(Enumerated.class);
-                if (enumerated.value() == EnumType.ORDINAL) {
+                if (Objects.equals(enumerated.value(), EnumType.ORDINAL)) {
                     return "INTEGER";
                 }
             }
@@ -85,29 +86,30 @@ public class ColumnMetaResolver {
     }
 
     /**
-     * 装配sql中动态参数的占位符 #{alias.paramterName,jdbcType=,typeHandler=}
+     * 装配sql中动态参数的占位符 #{alias.parameterName,jdbcType=,typeHandler=}
      */
     public static String resolveSqlPlaceholder(Field field, String alias) {
-        String sqlParameter = "#{";
+        StringBuilder sqlParameter = new StringBuilder();
+        sqlParameter.append("#{");
         if (alias != null && !"".equals(alias)) {
-            sqlParameter += alias + ".";
+            sqlParameter.append(alias).append(".");
         }
-        sqlParameter += field.getName();
+        sqlParameter.append(field.getName());
 
         // jdbcType
         String jdbcType = resolveJdbcAlias(field);
 
         if (jdbcType != null) {
-            sqlParameter += ", jdbcType=" + jdbcType;
+            sqlParameter.append(", jdbcType=").append(jdbcType);
         }
         // typeHandler
         Class<? extends TypeHandler<?>> typeHandler = resolveTypeHandler(field);
 
         if (typeHandler != null) {
-            sqlParameter += ", typeHandler=" + typeHandler.getName();
+            sqlParameter.append(", typeHandler=").append(typeHandler.getName());
         }
-        sqlParameter += "} ";
+        sqlParameter.append("} ");
 
-        return sqlParameter;
+        return sqlParameter.toString();
     }
 }
