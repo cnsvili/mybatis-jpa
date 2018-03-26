@@ -15,15 +15,13 @@ The plugins for mybatis, in order to provider the ability to handler jpa.
         <dependency>
             <groupId>com.littlenb</groupId>
             <artifactId>mybatis-jpa</artifactId>
-            <version>2.1.0</version>
+            <version>2.0.1</version>
         </dependency>
 ```
 
 ## Plugin boom
 
 + ResultTypePlugin [![plugin](https://img.shields.io/badge/plugin-resolved-green.svg)]()
-
-+ UpdatePlugin [![plugin](https://img.shields.io/badge/plugin-resolved-green.svg)]()
 
 ### ResultTypePlugin
 
@@ -90,58 +88,6 @@ mapper.xml
 <select id="selectById" resultType="userArchive">
 	SELECT * FROM t_sys_user_archive WHERE user_id = #{userId}
 </select>
-```
-
-### DefinitionStatementScanner
-
-注册MappedStatement,基于注解,仅支持Insert和Update。
-
-#### InsertDefinition:
-
-+ selective: 默认值false(处理null属性)
-
-#### updateDefinition:
-
-+ selective: 默认值false(处理null属性)
-
-+ where: SQL condition
-
-e.g.
-
-Spring 容器初始化完成后执行
-
-```java
-@Service
-public class DefinitionStatementInit {
-
-    @Autowired
-    private SqlSessionFactory sqlSessionFactory;
-
-    @PostConstruct
-    public void init() {
-        Configuration configuration = sqlSessionFactory.getConfiguration();
-        StatementBuildable statementBuildable = new DefinitionStatementBuilder(configuration);
-        DefinitionStatementScanner.Builder builder = new DefinitionStatementScanner.Builder();
-        DefinitionStatementScanner definitionStatementScanner = builder.configuration(configuration).basePackages(new String[]{"com.mybatis.jpa.mapper"})
-                .statementBuilder(statementBuildable).build();
-        definitionStatementScanner.scan();
-    }
-}
-```
-
-Mapper
-
-```Java
-@Mapper
-@Repository
-public interface UserUpdateMapper {
-
-    @InsertDefinition(selective = true)
-    int insert(User user);
-
-    @UpdateDefinition(selective = true, where = " user_id = #{userId}")
-    int updateById(User user);
-}
 ```
 
 Please view test package where has more examples.
