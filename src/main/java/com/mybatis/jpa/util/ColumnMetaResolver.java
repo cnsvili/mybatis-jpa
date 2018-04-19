@@ -3,6 +3,7 @@ package com.mybatis.jpa.util;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.type.*;
 
+import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.lang.reflect.Field;
@@ -25,6 +26,13 @@ public class ColumnMetaResolver {
     }
 
     public static String resolveJdbcAlias(Field field) {
+
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            if (column.columnDefinition() != null && !column.columnDefinition().equals("")) {
+                return column.columnDefinition();
+            }
+        }
 
         Class<?> fieldType = field.getType();
         if (field.getType().isEnum()) {

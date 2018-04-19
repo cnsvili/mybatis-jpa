@@ -30,7 +30,6 @@ public class PersistentUtil {
         }
     }
 
-
     public static String getColumnName(Field field) {
         return getColumnName(field, true);
     }

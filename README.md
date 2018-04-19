@@ -35,6 +35,8 @@ Mybatis插件，提供Mybatis处理JPA的能力。
 
 + 使用@Column注解中name属性指定SQL Column
 
++ 使用@Transient注解标记非持久化字段(不需要结果集映射的字段)
+
 类型处理:
 
 + Boolean-->BooleanTypeHandler
@@ -145,3 +147,6 @@ public interface UserUpdateMapper {
 ```
 
 更多示例请查看test目录代码。
+
+## 联系方式
+QQ交流群:246912326

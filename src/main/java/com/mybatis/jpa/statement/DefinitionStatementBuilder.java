@@ -43,7 +43,6 @@ public class DefinitionStatementBuilder implements StatementBuildable {
 
         LanguageDriver languageDriver = configuration.getDefaultScriptingLanuageInstance();
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, parseSQL(method), Object.class);
-        // String statementId = resource + method.getName();
         String statementId = method.getDeclaringClass().getName() + "." + method.getName();
         MappedStatement.Builder builder = new MappedStatement.Builder(configuration, statementId, sqlSource, recognizeSqlCommandType(method));
 

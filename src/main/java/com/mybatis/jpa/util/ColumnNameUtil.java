@@ -7,9 +7,6 @@ public class ColumnNameUtil {
 
     /**
      * camel to underline
-     *
-     * @param text
-     * @return camel
      */
     public static String camelToUnderline(String text) {
         if (text == null || "".equals(text.trim())) {
@@ -28,9 +25,6 @@ public class ColumnNameUtil {
 
     /**
      * underline to camel
-     *
-     * @param text
-     * @return underline
      */
     public static String underlineToCamel(String text) {
         if (text == null || "".equals(text.trim())) {
