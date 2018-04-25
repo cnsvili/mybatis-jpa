@@ -5,8 +5,8 @@ package com.mybatis.jpa.definition.property;
  **/
 public interface AnnotationProperty {
 
-    boolean selective();
+  boolean selective();
 
-    String where();
+  String where();
 
 }

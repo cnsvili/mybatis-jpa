@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.mybatis.jpa.model.User;
 
 /**
- * 
  * @author svili
- *
  */
 @Repository
 public interface UserQueryMapper {

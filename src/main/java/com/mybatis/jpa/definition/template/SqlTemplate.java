@@ -5,5 +5,5 @@ package com.mybatis.jpa.definition.template;
  **/
 public interface SqlTemplate {
 
-    String parseSQL(final Class<?> type);
+  String parseSQL(final Class<?> type);
 }

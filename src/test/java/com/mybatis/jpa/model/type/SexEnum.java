@@ -7,6 +7,6 @@ package com.mybatis.jpa.model.type;
  */
 public enum SexEnum {
 
-    UNKNOW, MALE, FEMALE;
+  UNKNOW, MALE, FEMALE;
 
 }

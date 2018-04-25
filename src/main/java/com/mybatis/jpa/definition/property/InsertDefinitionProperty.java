@@ -7,20 +7,20 @@ import com.mybatis.jpa.annotation.InsertDefinition;
  **/
 public class InsertDefinitionProperty implements AnnotationProperty {
 
-    private InsertDefinition annotation;
+  private InsertDefinition annotation;
 
-    public InsertDefinitionProperty(InsertDefinition annotation){
-        this.annotation = annotation;
-    }
+  public InsertDefinitionProperty(InsertDefinition annotation) {
+    this.annotation = annotation;
+  }
 
-    @Override
-    public boolean selective() {
-        return annotation.selective();
-    }
+  @Override
+  public boolean selective() {
+    return annotation.selective();
+  }
 
-    @Override
-    public String where() {
-        return null;
-    }
+  @Override
+  public String where() {
+    return null;
+  }
 
 }

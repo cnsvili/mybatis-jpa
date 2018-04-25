@@ -13,15 +13,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserUpdateMapper {
 
-    @InsertDefinition
-    int insert(User user);
+  @InsertDefinition
+  int insert(User user);
 
-    @InsertDefinition(selective = true)
-    int insertSelective(User user);
+  @InsertDefinition(selective = true)
+  int insertSelective(User user);
 
-    @UpdateDefinition(where = " user_id = #{userId}")
-    int updateById(User user);
+  @UpdateDefinition(where = " user_id = #{userId}")
+  int updateById(User user);
 
-    @UpdateDefinition(selective = true, where = " user_id = #{userId}")
-    int updateSelectiveById(User user);
+  @UpdateDefinition(selective = true, where = " user_id = #{userId}")
+  int updateSelectiveById(User user);
 }

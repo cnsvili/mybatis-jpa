@@ -16,16 +16,17 @@ import javax.annotation.PostConstruct;
 @Service
 public class DefinitionStatementInit {
 
-    @Autowired
-    private SqlSessionFactory sqlSessionFactory;
+  @Autowired
+  private SqlSessionFactory sqlSessionFactory;
 
-    @PostConstruct
-    public void init() {
-        Configuration configuration = sqlSessionFactory.getConfiguration();
-        StatementBuildable statementBuildable = new DefinitionStatementBuilder(configuration);
-        DefinitionStatementScanner.Builder builder = new DefinitionStatementScanner.Builder();
-        DefinitionStatementScanner definitionStatementScanner = builder.configuration(configuration).basePackages(new String[]{"com.mybatis.jpa.mapper"})
-                .statementBuilder(statementBuildable).build();
-        definitionStatementScanner.scan();
-    }
+  @PostConstruct
+  public void init() {
+    Configuration configuration = sqlSessionFactory.getConfiguration();
+    StatementBuildable statementBuildable = new DefinitionStatementBuilder(configuration);
+    DefinitionStatementScanner.Builder builder = new DefinitionStatementScanner.Builder();
+    DefinitionStatementScanner definitionStatementScanner = builder.configuration(configuration)
+        .basePackages(new String[]{"com.mybatis.jpa.mapper"})
+        .statementBuilder(statementBuildable).build();
+    definitionStatementScanner.scan();
+  }
 }
