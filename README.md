@@ -2,7 +2,7 @@
 
 [![Mybatis](https://img.shields.io/badge/mybatis-3.4.x-brightgreen.svg)](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis)
 [![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg)]()
-[![maven central](https://img.shields.io/badge/version-2.1.0-brightgreen.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.cnsvili%7Cmybatis-jpa%7C2.1.0%7C)
+[![maven central](https://img.shields.io/badge/version-2.1.01-brightgreen.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.cnsvili%7Cmybatis-jpa%7C2.1.1%7C)
 [![APACHE 2 License](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)](LICENSE)
 
 [:book: English Documentation](README-EN.md) | :book: 中文文档
@@ -15,7 +15,7 @@ Mybatis插件，提供Mybatis处理JPA的能力。
         <dependency>
             <groupId>com.littlenb</groupId>
             <artifactId>mybatis-jpa</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1</version>
         </dependency>
 ```
 
@@ -43,7 +43,15 @@ Mybatis插件，提供Mybatis处理JPA的能力。
 
 + Enum默认为EnumTypeHandler
 
-+ 使用@Enumerated(EnumType.ORDINAL) 指定为 EnumOrdinalTypeHandler
+  使用@Enumerated(EnumType.ORDINAL) 指定为 EnumOrdinalTypeHandler
+
++ Enum实现ICodeEnum接口实现自定义枚举值
+
+  使用@CodeEnum(CodeType.INT) 指定为 IntCodeEnumTypeHandler
+  
+  或@CodeEnum(CodeType.STRING) 指定为 StringCodeEnumTypeHandler
+  
+  @CodeEnum 优先级 高于 @Enumerated
 
 结果集嵌套:
 
@@ -78,7 +86,11 @@ public class UserArchive {// <resultMap id="xxx" type="userArchive">
     /** 枚举类型 */
     @Enumerated(EnumType.ORDINAL)
     private SexEnum sex;// <result property="sex" column="sex" typeHandler=EnumOrdinalTypeHandler/>
-
+    
+    /** 枚举类型,自定义值 */
+    @CodeEnum(CodeType.INT)
+    private PoliticalEnum political;// <result property="political" column="political" typeHandler=IntCodeEnumTypeHandler/>
+    
     /** 属性名与列名不一致 */
     @Column(name = "gmt_create")
     private Date createTime;// <result property="createTime" column="gmt_create"/>

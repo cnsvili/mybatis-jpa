@@ -1,8 +1,12 @@
 package com.mybatis.jpa.util;
 
+import com.mybatis.jpa.annotation.CodeEnum;
+import com.mybatis.jpa.annotation.MappedJdbcType;
+import com.mybatis.jpa.type.CodeType;
+import com.mybatis.jpa.type.IntCodeEnumTypeHandler;
+import com.mybatis.jpa.type.StringCodeEnumTypeHandler;
 import java.lang.reflect.Field;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import org.apache.ibatis.builder.BuilderException;
@@ -30,14 +34,20 @@ public class ColumnMetaResolver {
 
   public static String resolveJdbcAlias(Field field) {
 
-    if (field.isAnnotationPresent(Column.class)) {
-      Column column = field.getAnnotation(Column.class);
-      if (column.columnDefinition() != null && !column.columnDefinition().equals("")) {
-        return column.columnDefinition();
-      }
+    if (field.isAnnotationPresent(MappedJdbcType.class)) {
+      MappedJdbcType jdbcType = field.getAnnotation(MappedJdbcType.class);
+      return jdbcType.value().name();
     }
 
-    Class<?> fieldType = field.getType();
+    if (field.isAnnotationPresent(CodeEnum.class)) {
+      CodeEnum codeEnum = field.getAnnotation(CodeEnum.class);
+      if (Objects.equals(codeEnum.value(), CodeType.INT)) {
+        return JdbcType.INTEGER.name();
+      }
+      if (Objects.equals(codeEnum.value(), CodeType.STRING)) {
+        return JdbcType.VARCHAR.name();
+      }
+    }
     if (field.getType().isEnum()) {
       if (field.isAnnotationPresent(Enumerated.class)) {
         Enumerated enumerated = field.getAnnotation(Enumerated.class);
@@ -47,6 +57,9 @@ public class ColumnMetaResolver {
       }
       return "VARCHAR";
     }
+
+    Class<?> fieldType = field.getType();
+
     if (Integer.class.equals(fieldType)) {
       return "INTEGER";
     }
@@ -67,6 +80,18 @@ public class ColumnMetaResolver {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public static Class<? extends TypeHandler<?>> resolveTypeHandler(Field field) {
+
+    if (field.isAnnotationPresent(CodeEnum.class)) {
+      CodeEnum codeEnum = field.getAnnotation(CodeEnum.class);
+      if (Objects.equals(codeEnum.value(), CodeType.INT)) {
+        IntCodeEnumTypeHandler typeHandler = new IntCodeEnumTypeHandler(field.getType());
+        return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+      }
+      if (Objects.equals(codeEnum.value(), CodeType.STRING)) {
+        StringCodeEnumTypeHandler typeHandler = new StringCodeEnumTypeHandler(field.getType());
+        return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+      }
+    }
 
     if (field.getType().isEnum()) {
       if (field.isAnnotationPresent(Enumerated.class)) {
@@ -89,7 +114,7 @@ public class ColumnMetaResolver {
   }
 
   /**
-   * 装配sql中动态参数的占位符 #{paramterName,jdbcType=,typeHandler=}
+   * 装配sql中动态参数的占位符 #{parameterName,jdbcType=,typeHandler=}
    */
   public static String resolveSqlPlaceholder(Field field) {
 
