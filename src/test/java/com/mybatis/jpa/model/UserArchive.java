@@ -1,15 +1,15 @@
 package com.mybatis.jpa.model;
 
+import com.mybatis.jpa.annotation.CodeEnum;
+import com.mybatis.jpa.model.type.PoliticalEnum;
+import com.mybatis.jpa.model.type.SexEnum;
+import com.mybatis.jpa.type.CodeType;
 import java.util.Date;
-
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.mybatis.jpa.model.type.SexEnum;
 
 /***
  *
@@ -37,6 +37,12 @@ public class UserArchive {
    */
   @Enumerated(EnumType.ORDINAL)
   private SexEnum sex;
+
+  /**
+   * 政治面貌
+   */
+  @CodeEnum(CodeType.INT)
+  private PoliticalEnum political;
 
   /**
    * 民族
@@ -100,6 +106,14 @@ public class UserArchive {
 
   public void setSex(SexEnum sex) {
     this.sex = sex;
+  }
+
+  public PoliticalEnum getPolitical() {
+    return political;
+  }
+
+  public void setPolitical(PoliticalEnum political) {
+    this.political = political;
   }
 
   public String getRace() {

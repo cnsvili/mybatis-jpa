@@ -14,7 +14,7 @@ public class ResultTypeTest extends AbstractTest {
   @Resource
   private UserQueryMapper userQueryMapper;
 
-  //@Test
+  @Test
   public void selectById() {
     long id = 118299928123543552L;
 
